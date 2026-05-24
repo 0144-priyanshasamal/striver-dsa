@@ -77,8 +77,27 @@ class Solution {
 public:
     // Function to return Breadth First Traversal of given graph.
     vector<int> bfsOfGraph(int V, vector<vector<int>>& adj) {
-        // TODO: Implement the BFS traversal starting from vertex 0.
-        // Return a vector containing the visited nodes in BFS order.
+        vector<int> bfs;
+        vector<int> vis(V, 0);
+        queue<int> q;
         
+        // Start BFS traversal from vertex 0
+        q.push(0);
+        vis[0] = 1;
+        
+        while(!q.empty()) {
+            int node = q.front();
+            q.pop();
+            bfs.push_back(node);
+            
+            // Traverse all adjacent vertices of the current node
+            for(auto it : adj[node]) {
+                if(!vis[it]) {
+                    vis[it] = 1;
+                    q.push(it);
+                }
+            }
+        }
+        return bfs;
     }
 };

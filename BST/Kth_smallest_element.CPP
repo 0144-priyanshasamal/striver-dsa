@@ -22,4 +22,3 @@ public:
         return {kthSmallest, kthLargest};
     }
 };
-Explanation

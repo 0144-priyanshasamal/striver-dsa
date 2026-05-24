@@ -36,8 +36,6 @@ Constraints:
  * };
  */
 
-#include <climits>
-
 class Solution {
 public:
     TreeNode* bstFromPreorder(vector<int>& A) {
@@ -52,7 +50,3 @@ public:
         return root;
     }
 };
-
-/*
-Explanation
-*/

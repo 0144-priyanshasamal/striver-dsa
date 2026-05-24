@@ -40,8 +40,6 @@ Follow up:
 - Could you implement next() and hasNext() to run in average O(1) time and use O(h) memory, where h is the height of the tree?
 */
 
-#include <stack>
-
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -55,20 +53,26 @@ Follow up:
  */
 
 class BSTIterator {
+private:stack<TreeNode *>myStack;
 public:
     BSTIterator(TreeNode* root) {
-        
+        pushAll(root);
     }
-    
+     bool hasNext() {
+        return !myStack.empty();
+    }
     int next() {
-        
+        TreeNode *tmpNode=myStack.top();
+        myStack.pop();
+        pushAll(tmpNode->right);
+        return tmpNode->val;
     }
-    
-    bool hasNext() {
-        
+private:
+    void pushAll(TreeNode *node){
+        for(; node != NULL; myStack.push(node), node=node->left);
     }
+      
 };
-
 /**
  * Your BSTIterator object will be instantiated and called as such:
  * BSTIterator* obj = new BSTIterator(root);

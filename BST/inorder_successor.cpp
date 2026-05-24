@@ -33,7 +33,7 @@ Constraints:
 class Solution {
 public:
     TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
-        // Write your code here
+        
         TreeNode* successor=NULL;
         while(root != NULL){
             if(p->val >=root->val){

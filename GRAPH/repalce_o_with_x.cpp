@@ -54,61 +54,57 @@ Complexity:
 using namespace std;
 
 // =============================================================================
-// Implementation 1: GFG Style (Using DFS and Visited Array)
+// Corrected Implementation of User's Solution
 // =============================================================================
-class SolutionGFG {
+class Solution {
 private:
-    void dfs(int r, int c, vector<vector<int>>& vis, vector<vector<char>>& mat, int dRow[], int dCol[]) {
-        vis[r][c] = 1;
+    void dfs(int row, int col, vector<vector<int>> &vis, vector<vector<char>> &mat) {
+        vis[row][col] = 1;     
         int n = mat.size();
         int m = mat[0].size();
-        
+        int delRow[] = {-1, 0, 1, 0};
+        int delCol[] = {0, 1, 0, -1};
+
         for (int i = 0; i < 4; i++) {
-            int nRow = r + dRow[i];
-            int nCol = c + dCol[i];
+            int nRow = row + delRow[i];
+            int nCol = col + delCol[i];
             
-            // Check boundary, check if it's 'O', and check if not visited
-            if (nRow >= 0 && nRow < n && nCol >= 0 && nCol < m) {
-                if (!vis[nRow][nCol] && mat[nRow][nCol] == 'O') {
-                    dfs(nRow, nCol, vis, mat, dRow, dCol);
-                }
+            // Fixed: Use char literals ('O') instead of string literals ("O")
+            if (nRow >= 0 && nRow < n && nCol >= 0 && nCol < m && mat[nRow][nCol] == 'O' && !vis[nRow][nCol]) {
+                dfs(nRow, nCol, vis, mat);
             }
-        }
+        }     
     }
 
 public:
     vector<vector<char>> fill(int n, int m, vector<vector<char>> mat) {
         vector<vector<int>> vis(n, vector<int>(m, 0));
         
-        int dRow[] = {-1, 0, 1, 0};
-        int dCol[] = {0, 1, 0, -1};
-        
-        // Traverse first row and last row
+        // Step 1: Traverse first row and last row to mark boundary 'O's
         for (int j = 0; j < m; j++) {
-            // First row
+            // first row 
             if (!vis[0][j] && mat[0][j] == 'O') {
-                dfs(0, j, vis, mat, dRow, dCol);
+                dfs(0, j, vis, mat);
             }
-            // Last row
+            // last row
             if (!vis[n - 1][j] && mat[n - 1][j] == 'O') {
-                dfs(n - 1, j, vis, mat, dRow, dCol);
+                dfs(n - 1, j, vis, mat);
             }
         }
         
-        // Traverse first column and last column
+        // Step 2: Traverse first column and last column to mark boundary 'O's
         for (int i = 0; i < n; i++) {
-            // First column
+            // first column
             if (!vis[i][0] && mat[i][0] == 'O') {
-                dfs(i, 0, vis, mat, dRow, dCol);
+                dfs(i, 0, vis, mat);
             }
-            // Last column
+            // last column
             if (!vis[i][m - 1] && mat[i][m - 1] == 'O') {
-                dfs(i, m - 1, vis, mat, dRow, dCol);
+                dfs(i, m - 1, vis, mat);
             }
         }
-        
-        // If a cell is 'O' and has not been visited, it means it is surrounded.
-        // So, replace it with 'X'.
+
+        // Step 3: Replace all unvisited 'O's with 'X'
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 if (!vis[i][j] && mat[i][j] == 'O') {
@@ -116,68 +112,9 @@ public:
                 }
             }
         }
-        
+
+        // Step 4: Return the modified matrix
         return mat;
     }
 };
 
-// =============================================================================
-// Implementation 2: LeetCode 130 - Surrounded Regions (In-place DFS, Space Optimized)
-// =============================================================================
-// This implementation modifies the board directly. Instead of using a 'vis' array,
-// boundary-connected 'O's are temporarily replaced with '#' to save space.
-class SolutionLeetCode {
-private:
-    void dfs(int r, int c, vector<vector<char>>& board) {
-        int n = board.size();
-        int m = board[0].size();
-        
-        board[r][c] = '#'; // Mark as boundary-connected
-        
-        int dRow[] = {-1, 0, 1, 0};
-        int dCol[] = {0, 1, 0, -1};
-        
-        for (int i = 0; i < 4; i++) {
-            int nRow = r + dRow[i];
-            int nCol = c + dCol[i];
-            
-            if (nRow >= 0 && nRow < n && nCol >= 0 && nCol < m && board[nRow][nCol] == 'O') {
-                dfs(nRow, nCol, board);
-            }
-        }
-    }
-
-public:
-    void solve(vector<vector<char>>& board) {
-        if (board.empty()) return;
-        int n = board.size();
-        int m = board[0].size();
-        
-        // Step 1: Run DFS from boundary 'O's and temporarily change them to '#'
-        for (int i = 0; i < n; i++) {
-            // Left boundary
-            if (board[i][0] == 'O') dfs(i, 0, board);
-            // Right boundary
-            if (board[i][m - 1] == 'O') dfs(i, m - 1, board);
-        }
-        for (int j = 0; j < m; j++) {
-            // Top boundary
-            if (board[0][j] == 'O') dfs(0, j, board);
-            // Bottom boundary
-            if (board[n - 1][j] == 'O') dfs(n - 1, j, board);
-        }
-        
-        // Step 2: Update the board
-        // - Replace remaining 'O's (surrounded) with 'X'
-        // - Restore '#'s (boundary-connected) back to 'O'
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                if (board[i][j] == 'O') {
-                    board[i][j] = 'X';
-                } else if (board[i][j] == '#') {
-                    board[i][j] = 'O';
-                }
-            }
-        }
-    }
-};

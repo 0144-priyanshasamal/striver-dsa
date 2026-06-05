@@ -53,11 +53,43 @@ class Solution {
 public:
     // Function to check if it is possible to finish all tasks.
     bool isPossible(int N, int P, vector<pair<int, int>>& prerequisites) {
-        // TODO: Implement prerequisite tasks check (Cycle Detection in Directed Graph).
-        // 1. Build the adjacency list from the prerequisites list.
-        // 2. Apply Kahn's Algorithm (BFS) or DFS to detect if a cycle exists.
-        // 3. Return true if there is no cycle (all tasks can be completed), else return false.
-        vector<int> adj[N];
-        return false;
+        // Build the adjacency list from the prerequisites list.
+        vector<vector<int>> adj(N);
+        for(auto it : prerequisites){
+            adj[it.first].push_back(it.second);
+        }
+        
+        // Calculate in-degree of each node.
+        vector<int> indegree(N, 0);
+        for(int i = 0; i < N; i++){
+            for(int node : adj[i]){
+                indegree[node]++;
+            }
+        }
+        
+        // Add nodes with in-degree 0 to the queue.
+        queue<int> q;
+        for(int i = 0; i < N; i++){
+            if(indegree[i] == 0){
+                q.push(i);
+            }
+        }
+        
+        // Process BFS to build topological order.
+        vector<int> topo;
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            topo.push_back(node);
+            for(auto it : adj[node]){
+                indegree[it]--;
+                if(indegree[it] == 0) {
+                    q.push(it);
+                }
+            }    
+        }
+        
+        // If topological sort contains all nodes, no cycle exists.
+        return topo.size() == N;
     }
 };

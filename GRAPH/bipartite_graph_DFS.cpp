@@ -78,13 +78,10 @@ public:
     // Function to check if the graph is bipartite.
     bool isBipartite(int V, vector<int> adj[]) {
         // TODO: Initialize color array and check all components using checkDFS.
-        int color[V];
-        for(int i=0;i<n;i++){
-            color[i]=-1;
-        }
-        for(int i=0;i<n;i++){
+        vector<int> color(V, -1);
+        for(int i=0;i<V;i++){
             if(color[i]==-1){
-                if(dfs(i,0,color,adj) == false) return false;
+                if(dfs(i,0,color.data(),adj) == false) return false;
             }
         }
         return true;
